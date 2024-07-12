@@ -2,10 +2,10 @@
 export default interface Monster {
     name: string;
     nickname: string|null;
-    level: number|null;
-    nextEvolution: Monster; // need to be able to print without instantiating monster class...
-    totalEXP: number|null; // totalContributions 
-    requiredEXPToLevelUp: number|null; // requiredContributionsForLevelUp
+    level: number;
+    nextEvolution: Monster|null; // need to be able to print without instantiating monster class...
+    totalEXP: number; // totalContributions 
+    requiredEXPToLevelUp: number; // requiredContributionsForLevelUp
     evolutionRequirement: number|null;
   };
   
@@ -18,15 +18,15 @@ export default interface Monster {
   };
 
   export function checkForLevelUp(m: Monster) {
-    levelUp(m);
+    if(m.requiredEXPToLevelUp <= 0) {
+      levelUp(m);
+    }
   };
 
   export function gainEXP(m: Monster, exp: number) {
-    if (typeof m.totalEXP === "number" && typeof m.requiredEXPToLevelUp === "number") {
-      m.totalEXP += exp;
-      m.requiredEXPToLevelUp += exp;
-      checkForLevelUp(m);
-    }
+    m.totalEXP += exp;
+    m.requiredEXPToLevelUp += exp;
+    checkForLevelUp(m);
   };
 
   export function evolve(m:Monster) {
@@ -34,7 +34,7 @@ export default interface Monster {
   };
 
   export function checkForEvolution(m: Monster) {
-    if (typeof m.evolutionRequirement === "number" && typeof m.level === "number") {
+    if (typeof m.evolutionRequirement === "number") {
       if(m.level >= m.evolutionRequirement) {
         evolve(m);
       }
@@ -42,9 +42,7 @@ export default interface Monster {
   };
 
   export function levelUp(m: Monster) {
-    if (typeof m.level === "number") {
-      m.level++;
-      resetRequiredEXPToLevelUp(m);
-      checkForEvolution(m);
-    };
+    m.level++;
+    resetRequiredEXPToLevelUp(m);
+    checkForEvolution(m);
   };
