@@ -95,6 +95,12 @@ function testEvolutionCheck() {
         checkForEvolution(monster);
         assertEquals(monster, defaultMonsterProperties);
     });
+
+    Deno.test(".evolutionCheck - When there is no next evolution", () => {
+        const monster:Monster = { ...defaultMonsterProperties, nextEvolution: null };
+        checkForEvolution(monster);
+        assertEquals(monster, { ...defaultMonsterProperties, nextEvolution: null });
+    });
 };
 
 Deno.test("Monster class - .levelUp", () => {

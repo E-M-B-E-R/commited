@@ -32,7 +32,7 @@ export default interface Monster {
 
   export function checkForEvolution(m: Monster) {
     if (typeof m.evolutionRequirement === "number") {
-      if(m.level >= m.evolutionRequirement) {
+      if(m.level >= m.evolutionRequirement && m.nextEvolution) {
         evolve(m);
       }
     };
