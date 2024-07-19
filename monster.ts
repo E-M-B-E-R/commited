@@ -5,6 +5,7 @@ export default interface Monster {
     level: number;
     nextEvolution: Monster|null; // need to be able to print without instantiating monster class...
     totalEXP: number; // totalContributions 
+    currentEXP: number,
     requiredEXPToLevelUp: number; // requiredContributionsForLevelUp
     evolutionRequirement: number|null;
   };
@@ -13,19 +14,15 @@ export default interface Monster {
     return `Hello, ${m.name}!`;
   };
 
-  export function resetRequiredEXPToLevelUp(m: Monster) {
-    m.requiredEXPToLevelUp = 0;
-  };
-
   export function checkForLevelUp(m: Monster) {
-    if(m.requiredEXPToLevelUp <= 0) {
+    if(m.currentEXP >= m.requiredEXPToLevelUp) {
       levelUp(m);
     }
   };
 
   export function gainEXP(m: Monster, exp: number) {
     m.totalEXP += exp;
-    m.requiredEXPToLevelUp += exp;
+    m.currentEXP += exp;
     checkForLevelUp(m);
   };
 
@@ -43,6 +40,6 @@ export default interface Monster {
 
   export function levelUp(m: Monster) {
     m.level++;
-    resetRequiredEXPToLevelUp(m);
+    m.currentEXP = m.currentEXP - m.requiredEXPToLevelUp;
     checkForEvolution(m);
   };
