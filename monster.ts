@@ -1,45 +1,66 @@
-
-export default interface Monster {
+export default class Monster {
     name: string;
-    nickname: string|null;
+    nickname: string | null;
     level: number;
-    nextEvolution: Monster|null; // need to be able to print without instantiating monster class...
+    nextEvolution: Monster | null; // need to be able to print without instantiating monster class...
     totalEXP: number; // totalContributions 
-    currentEXP: number,
+    currentEXP: number;
     requiredEXPToLevelUp: number; // requiredContributionsForLevelUp
-    evolutionRequirement: number|null;
+    evolutionRequirement: number | null;
+  
+  constructor(
+    name: string,
+    nickname: string | null,
+    level: number,
+    nextEvolution: Monster | null,
+    totalEXP: number, 
+    currentEXP: number,
+    requiredEXPToLevelUp: number,
+    evolutionRequirement: number | null,
+  ) {
+    this.name = name;
+    this.nickname = nickname;
+    this.level = level;
+    this.nextEvolution = nextEvolution;
+    this.totalEXP = totalEXP;
+    this.currentEXP = currentEXP;
+    this.requiredEXPToLevelUp = requiredEXPToLevelUp;
+    this.evolutionRequirement = evolutionRequirement;
   };
   
-  export function sayHello(m: Monster): string {
-    return `Hello, ${m.name}!`;
+  sayHello(): string {
+    return `Hello, ${this.name}!`;
   };
 
-  export function checkForLevelUp(m: Monster) {
-    if(m.currentEXP >= m.requiredEXPToLevelUp) {
-      levelUp(m);
-    }
-  };
-
-  export function gainEXP(m: Monster, exp: number) {
-    m.totalEXP += exp;
-    m.currentEXP += exp;
-    checkForLevelUp(m);
-  };
-
-  export function evolve(m:Monster) {
-    console.log("Placeholder function. Next evolution: ", m.nextEvolution);
-  };
-
-  export function checkForEvolution(m: Monster) {
-    if (typeof m.evolutionRequirement === "number") {
-      if(m.level >= m.evolutionRequirement && m.nextEvolution) {
-        evolve(m);
-      }
+  private checkForLevelUp() {
+    if(this.currentEXP >= this.requiredEXPToLevelUp) {
+      this.levelUp();
     };
   };
 
-  export function levelUp(m: Monster) {
-    m.level++;
-    m.currentEXP = m.currentEXP - m.requiredEXPToLevelUp;
-    checkForEvolution(m);
+  gainEXP(exp: number) {
+    this.totalEXP += exp;
+    this.currentEXP += exp;
+    this.checkForLevelUp();
   };
+
+  private evolve() {
+    if (this.nextEvolution) {
+      Object.assign(this, this.nextEvolution);
+    };
+  };
+
+  private checkForEvolution() {
+    if (typeof this.evolutionRequirement === "number" && this.nextEvolution) {
+      if(this.level >= this.evolutionRequirement) {
+        this.evolve();
+      };
+    };
+  };
+
+  private levelUp() {
+    this.level++;
+    this.currentEXP = this.currentEXP - this.requiredEXPToLevelUp;
+    this.checkForEvolution();
+  };
+};
