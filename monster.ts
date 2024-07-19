@@ -1,3 +1,14 @@
+export interface MonsterConfig {
+  name: string;
+  nickname: string | null;
+  level: number;
+  nextEvolution: Monster | null; // need to be able to print without instantiating monster class...
+  totalEXP: number; // totalContributions 
+  currentEXP: number;
+  requiredEXPToLevelUp: number; // requiredContributionsForLevelUp
+  evolutionRequirement: number | null;
+}
+
 export default class Monster {
     name: string;
     nickname: string | null;
@@ -8,24 +19,15 @@ export default class Monster {
     requiredEXPToLevelUp: number; // requiredContributionsForLevelUp
     evolutionRequirement: number | null;
   
-  constructor(
-    name: string,
-    nickname: string | null,
-    level: number,
-    nextEvolution: Monster | null,
-    totalEXP: number, 
-    currentEXP: number,
-    requiredEXPToLevelUp: number,
-    evolutionRequirement: number | null,
-  ) {
-    this.name = name;
-    this.nickname = nickname;
-    this.level = level;
-    this.nextEvolution = nextEvolution;
-    this.totalEXP = totalEXP;
-    this.currentEXP = currentEXP;
-    this.requiredEXPToLevelUp = requiredEXPToLevelUp;
-    this.evolutionRequirement = evolutionRequirement;
+  constructor( config: MonsterConfig ) {
+    this.name = config.name;
+    this.nickname = config.nickname;
+    this.level = config.level;
+    this.nextEvolution = config.nextEvolution;
+    this.totalEXP = config.totalEXP;
+    this.currentEXP = config.currentEXP;
+    this.requiredEXPToLevelUp = config.requiredEXPToLevelUp;
+    this.evolutionRequirement = config.evolutionRequirement;
   };
   
   sayHello(): string {
