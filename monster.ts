@@ -34,6 +34,19 @@ export default class Monster {
     return `Hello, ${this.name}!`;
   };
 
+  getCurrentInfo() {
+   return {
+    name: this.name,
+    nickname: this.nickname,
+    level: this.level,
+    nextEvolution: this.nextEvolution,
+    totalEXP: this.totalEXP,
+    currentEXP:this.currentEXP,
+    requiredEXPToLevelUp: this.requiredEXPToLevelUp,
+    evolutionRequirement: this.evolutionRequirement,
+   }
+  };
+
   private checkForLevelUp() {
     if(this.currentEXP >= this.requiredEXPToLevelUp) {
       this.levelUp();
