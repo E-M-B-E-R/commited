@@ -1,9 +1,10 @@
 import { load } from "https://deno.land/std@0.224.0/dotenv/mod.ts";
 
-import Monster, { sayHello } from "./monster.ts";
+import { initializeDB } from "./database.ts";
 import { syncContributionsWithGithub } from "./syncWithGithub.ts";
 
 const env = await load();
+const db = await initializeDB();
 const token = env["TOKEN"];
 const username = env["USERNAME"];
 
@@ -22,7 +23,7 @@ try {
 } catch ({ name, message }) {
     console.log(`Error: ${name}, Message: ${message}`);
 };
-
+db.close();
 // Setup:
     // Get all contribution data - call getContributions
     // Calculate base score - call calculateScore
