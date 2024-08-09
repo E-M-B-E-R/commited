@@ -8,22 +8,31 @@ const db = await initializeDB();
 const token = env["TOKEN"];
 const username = env["USERNAME"];
 
-const FIFTEEN_MINUTES = 900000;
-const DEFAULT_SYNC_TIME_IN_MILLISECONDS = 60000;
+const TWENTY_SECONDS = 20000;
+const DEFAULT_SYNC_TIME_IN_MILLISECONDS = TWENTY_SECONDS;
 const lastSync = new Date(Date.now() - 30 * 24 * 60 * 60  * 1000); // thirty days ago
 const oneYearAgo = new Date();
 oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
 
-await syncContributionsWithGithub(username, token, oneYearAgo, lastSync);
-try {
-  setTimeout(
-    async () => { await syncContributionsWithGithub(username, token, lastSync, new Date()) }, 
-    DEFAULT_SYNC_TIME_IN_MILLISECONDS
-  );
-} catch ({ name, message }) {
-    console.log(`Error: ${name}, Message: ${message}`);
+const recursiveSync = async (username: string, token: string, start: Date, end: Date) => {
+  const stop = false;
+  try {
+    const results = await syncContributionsWithGithub(username, token, start, end);
+    console.log(results);
+  } catch ({name, message}) {
+    console.log(`Error: ${name}, Message ${message}`);
+  }
+  if(stop) {
+    console.log("condition met... stopping api calls. This should probably be triggered via a pause or exit. Might not need it.");
+  } else {
+    setTimeout(() => recursiveSync(username, token, start, end), DEFAULT_SYNC_TIME_IN_MILLISECONDS);
+  }
 };
+
+recursiveSync(username, token, oneYearAgo, lastSync);
+
 db.close();
+
 // Setup:
     // Get all contribution data - call getContributions
     // Calculate base score - call calculateScore
