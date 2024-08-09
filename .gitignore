@@ -24,4 +24,9 @@ ehthumbs.db
 Thumbs.db
 
 # ENV #
+######################
 .env
+
+# Database files #
+######################
+*.sqlite
