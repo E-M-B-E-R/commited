@@ -11,8 +11,7 @@ const username = env["USERNAME"];
 const TWENTY_SECONDS = 20000;
 const DEFAULT_SYNC_TIME_IN_MILLISECONDS = TWENTY_SECONDS;
 const lastSync = new Date(Date.now() - 30 * 24 * 60 * 60  * 1000); // thirty days ago
-const oneYearAgo = new Date();
-oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+const oneYearAgo = new Date().setFullYear(new Date().getFullYear() - 1);
 
 const recursiveSync = async (username: string, token: string, start: Date, end: Date) => {
   const stop = false;
