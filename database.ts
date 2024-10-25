@@ -1,14 +1,8 @@
 import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
+import { createMonsterTableQueryString, insertMonsterQueryString } from "./database/queries/monsters.ts"
 
 const queries = [
-    `
-        CREATE TABLE IF NOT EXISTS monsters (
-            monster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            name TEXT NOT NULL,
-            alive_time_in_minutes INTEGER NOT NULL,
-            stage TEXT NOT NULL
-        )
-    `,
+    createMonsterTableQueryString,
     `
         CREATE TABLE IF NOT EXISTS user_monsters (
             user_monster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -73,20 +67,6 @@ const monstersData = [
     }
 ];
 
-const monsterQueryString = `
-  INSERT INTO monsters (
-    monster_id, 
-    name, 
-    alive_time_in_minutes, 
-    stage
-    ) VALUES (
-      :monster_id,
-      :name,
-      :alive_time_in_minutes,
-      :stage
-    )
-`;
-
 const insertMonster = (db: DB, data: QueryParameterSet, query: string) => {
     const insertMonsterQuery = db.prepareQuery<[], {
         monster_id: number;
@@ -100,7 +80,7 @@ const insertMonster = (db: DB, data: QueryParameterSet, query: string) => {
 
 const seedMonsters = (db: DB, monsterList: Array<QueryParameterSet> ) => {
     monsterList.forEach((monsterData) => {
-        insertMonster(db, monsterData, monsterQueryString);
+        insertMonster(db, monsterData, insertMonsterQueryString);
     });
 };
 
