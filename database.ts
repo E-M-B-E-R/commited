@@ -1,8 +1,8 @@
 import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
 import { createMonsterTableQueryString, insertMonsterQueryString } from "./database/queries/monsters.ts"
-import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/user_monsters.ts";
+import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/userMonsters.ts";
 import { createUsersTableQueryString, insertUsersQueryString } from "./database/queries/users.ts";
-import { createEvolutionRequirementsTableQueryString, insertEvolutionRequirementQuery } from "./database/queries/evolution_requirements.ts";
+import { createEvolutionRequirementsTableQueryString, insertEvolutionRequirementQuery } from "./database/queries/evolutionRequirements.ts";
 
 const queries = [
     createMonsterTableQueryString,
