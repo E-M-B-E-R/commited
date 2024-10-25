@@ -1,4 +1,4 @@
-import { DB } from "https://deno.land/x/sqlite@v3.8/mod.ts";
+import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
 
 const queries = [
     `
@@ -69,9 +69,19 @@ const seedUsers = (db: DB) => {
     `);
 };
 
-const seedEvolutionRequirements  = (db: DB) => {
-    return db.query(`
-        INSERT INTO evolution_requirements (
+const evolutionRequirementsData = [{
+    evolution_requirement_id: 1,
+    monster_id: 1,
+    evolution_id: 2, 
+    percent_commits: 0.25,
+    percent_pull_requests_opened: 0,
+    percent_issues_opened: 0,
+    percent_pull_request_reviews: 0,
+    total_monster_age_in_minutes: 3
+}];
+
+const evolutionRequirementsQueryString = `
+  INSERT INTO  evolution_requirements (
             evolution_requirement_id, 
             monster_id, 
             evolution_id, 
@@ -80,24 +90,44 @@ const seedEvolutionRequirements  = (db: DB) => {
             percent_issues_opened, 
             percent_pull_request_reviews, 
             total_monster_age_in_minutes
-        )
-        VALUES (
-            NULL,
-            1,
-            2,
-            0.25,
-            0,
-            0,
-            0,
-            3 
+  ) VALUES (
+    :evolution_requirement_id,
+    :monster_id,  
+    :evolution_id, 
+    :percent_commits,
+    :percent_pull_requests_opened,
+    :percent_issues_opened,
+    :percent_pull_request_reviews,
+    :total_monster_age_in_minutes
+   )
+`;
+
+const insertEvolutionRequirement = (db: DB, data: QueryParameterSet, query: string) => {
+    const insertEvolutionRequirementQuery = db.prepareQuery<[], {
+        evolution_requirement_id: number;
+        monster_id: number;
+        evolution_id: number;
+        percent_commits: string;
+        percent_pull_requests_opened: number; 
+        percent_issues_opened: number;
+        percent_pull_request_reviews: number; 
+        total_monster_age_in_minutes: number;
+    }>(query);
+    insertEvolutionRequirementQuery.execute(data);
+    insertEvolutionRequirementQuery.finalize();
+};
+
+const seedEvolutionRequirements = (db: DB, evolutionRequirementList: Array<QueryParameterSet> ) => {
+    evolutionRequirementList.forEach((evolutionRequirementData) => {
+        insertEvolutionRequirement(db,evolutionRequirementData, evolutionRequirementsQueryString);
+    });
+};
         )
     `);
 };
 
 const seedTables = (db: DB) => {
-    seedMonsters(db);
-    seedUsers(db);
-    seedEvolutionRequirements(db);
+    seedEvolutionRequirements(db, evolutionRequirementsData);
 };
 
 export const initializeDB = async () => {
