@@ -1,18 +1,12 @@
 import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
 import { createMonsterTableQueryString, insertMonsterQueryString } from "./database/queries/monsters.ts"
 import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/user_monsters.ts";
+import { createUsersTableQueryString, insertUsersQueryString } from "./database/queries/users.ts";
 
 const queries = [
     createMonsterTableQueryString,
     createUserMonstersTableQueryString,
-    `
-        CREATE TABLE IF NOT EXISTS users (
-            user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            name TEXT NOT NULL,
-            user_monster_id INTEGER,
-            FOREIGN KEY (user_monster_id) REFERENCES user_monsters(user_monster_id)
-        )
-    `,
+    createUsersTableQueryString,
     `
         CREATE TABLE IF NOT EXISTS evolution_requirements (
             evolution_requirement_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -78,18 +72,6 @@ const usersData = [{
     user_monster_id: 1
 }];
 
-const userQueryString = `
-  INSERT INTO users (
-    user_id, 
-    name,  
-    user_monster_id
-    ) VALUES (
-      :user_id,
-      :name,
-      :user_monster_id
-    )
-`;
-
 const insertUser = (db: DB, data: QueryParameterSet, query: string) => {
     const insertUserQuery = db.prepareQuery<[], {
         user_id: number;
@@ -102,7 +84,7 @@ const insertUser = (db: DB, data: QueryParameterSet, query: string) => {
 
 const seedUsers = (db: DB, userList: Array<QueryParameterSet> ) => {
     userList.forEach((userData) => {
-        insertUser(db, userData, userQueryString);
+        insertUser(db, userData, insertUsersQueryString);
     });
 };
 
