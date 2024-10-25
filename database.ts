@@ -3,11 +3,12 @@ import { createMonsterTableQueryString, insertMonsterQueryString } from "./datab
 import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/userMonsters.ts";
 import { createUsersTableQueryString, insertUsersQueryString } from "./database/queries/users.ts";
 import { createEvolutionRequirementsTableQueryString, insertEvolutionRequirementQuery } from "./database/queries/evolutionRequirements.ts";
-import { monstersData } from "./database/seeders/monsters.ts";
-import { evolutionRequirementsData } from "./database/seeders/evolutionRequirements.ts";
-import { usersData } from "./database/seeders/users.ts";
-import { usersMonstersData } from "./database/seeders/userMonsters.ts";
-
+import { 
+    evolutionRequirementsData,
+    monstersData,
+    usersData,
+    usersMonstersData,
+} from "./database/seeders/index.ts";
 const queries = [
     createMonsterTableQueryString,
     createUserMonstersTableQueryString,
@@ -20,7 +21,6 @@ const createTables = (db: DB, queries : Array<string>) => {
         db.query(query);
     });
 };
-
 
 const insertMonster = (db: DB, data: QueryParameterSet, query: string) => {
     const insertMonsterQuery = db.prepareQuery<[], {
