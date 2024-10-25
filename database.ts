@@ -2,24 +2,13 @@ import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
 import { createMonsterTableQueryString, insertMonsterQueryString } from "./database/queries/monsters.ts"
 import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/user_monsters.ts";
 import { createUsersTableQueryString, insertUsersQueryString } from "./database/queries/users.ts";
+import { createEvolutionRequirementsTableQueryString, insertEvolutionRequirementQuery } from "./database/queries/evolution_requirements.ts";
 
 const queries = [
     createMonsterTableQueryString,
     createUserMonstersTableQueryString,
     createUsersTableQueryString,
-    `
-        CREATE TABLE IF NOT EXISTS evolution_requirements (
-            evolution_requirement_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            monster_id INTEGER,
-            evolution_id monster_id,
-            percent_commits REAL NOT NULL,
-            percent_pull_requests_opened REAL NOT NULL,
-            percent_issues_opened REAL NOT NULL,
-            percent_pull_request_reviews REAL NOT NULL,
-            total_monster_age_in_minutes INTEGER,
-            FOREIGN KEY (monster_id) REFERENCES monsters(monster_id)
-        )
-    `
+    createEvolutionRequirementsTableQueryString,
 ];
 
 const createTables = (db: DB, queries : Array<string>) => {
@@ -99,28 +88,6 @@ const evolutionRequirementsData = [{
     total_monster_age_in_minutes: 3
 }];
 
-const evolutionRequirementsQueryString = `
-  INSERT INTO  evolution_requirements (
-    evolution_requirement_id, 
-    monster_id, 
-    evolution_id, 
-    percent_commits, 
-    percent_pull_requests_opened, 
-    percent_issues_opened, 
-    percent_pull_request_reviews, 
-    total_monster_age_in_minutes
-  ) VALUES (
-    :evolution_requirement_id,
-    :monster_id,  
-    :evolution_id, 
-    :percent_commits,
-    :percent_pull_requests_opened,
-    :percent_issues_opened,
-    :percent_pull_request_reviews,
-    :total_monster_age_in_minutes
-   )
-`;
-
 const insertEvolutionRequirement = (db: DB, data: QueryParameterSet, query: string) => {
     const insertEvolutionRequirementQuery = db.prepareQuery<[], {
         evolution_requirement_id: number;
@@ -138,7 +105,7 @@ const insertEvolutionRequirement = (db: DB, data: QueryParameterSet, query: stri
 
 const seedEvolutionRequirements = (db: DB, evolutionRequirementList: Array<QueryParameterSet> ) => {
     evolutionRequirementList.forEach((evolutionRequirementData) => {
-        insertEvolutionRequirement(db,evolutionRequirementData, evolutionRequirementsQueryString);
+        insertEvolutionRequirement(db,evolutionRequirementData, insertEvolutionRequirementQuery);
     });
 };
 
