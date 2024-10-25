@@ -3,6 +3,10 @@ import { createMonsterTableQueryString, insertMonsterQueryString } from "./datab
 import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/userMonsters.ts";
 import { createUsersTableQueryString, insertUsersQueryString } from "./database/queries/users.ts";
 import { createEvolutionRequirementsTableQueryString, insertEvolutionRequirementQuery } from "./database/queries/evolutionRequirements.ts";
+import { monstersData } from "./database/seeders/monsters.ts";
+import { evolutionRequirementsData } from "./database/seeders/evolutionRequirements.ts";
+import { usersData } from "./database/seeders/users.ts";
+import { usersMonstersData } from "./database/seeders/userMonsters.ts";
 
 const queries = [
     createMonsterTableQueryString,
@@ -17,26 +21,6 @@ const createTables = (db: DB, queries : Array<string>) => {
     });
 };
 
-const monstersData = [
-    {
-        monster_id: 1,
-        name: 'Baby Gabo',
-        alive_time_in_minutes: 3,
-        stage: 1,
-    },
-    {
-        monster_id: 2,
-        name: 'Gabo',
-        alive_time_in_minutes: 10,
-        stage: 2,    
-    },
-    {
-        monster_id: 3,
-        name: 'Super Gabo',
-        alive_time_in_minutes: 25,
-        stage: 3,
-    }
-];
 
 const insertMonster = (db: DB, data: QueryParameterSet, query: string) => {
     const insertMonsterQuery = db.prepareQuery<[], {
@@ -55,12 +39,6 @@ const seedMonsters = (db: DB, monsterList: Array<QueryParameterSet> ) => {
     });
 };
 
-const usersData = [{
-    user_id: 1,
-    name: "E-M-B-E-R", 
-    user_monster_id: 1
-}];
-
 const insertUser = (db: DB, data: QueryParameterSet, query: string) => {
     const insertUserQuery = db.prepareQuery<[], {
         user_id: number;
@@ -76,17 +54,6 @@ const seedUsers = (db: DB, userList: Array<QueryParameterSet> ) => {
         insertUser(db, userData, insertUsersQueryString);
     });
 };
-
-const evolutionRequirementsData = [{
-    evolution_requirement_id: 1,
-    monster_id: 1,
-    evolution_id: 2, 
-    percent_commits: 0.25,
-    percent_pull_requests_opened: 0,
-    percent_issues_opened: 0,
-    percent_pull_request_reviews: 0,
-    total_monster_age_in_minutes: 3
-}];
 
 const insertEvolutionRequirement = (db: DB, data: QueryParameterSet, query: string) => {
     const insertEvolutionRequirementQuery = db.prepareQuery<[], {
@@ -109,17 +76,6 @@ const seedEvolutionRequirements = (db: DB, evolutionRequirementList: Array<Query
     });
 };
 
-const usersMonstersData = [{
-    monster_id: 1,
-    nickname: "Hi", 
-    current_commits: 0,
-    current_pull_requests_opened:0,
-    current_opened_issues: 0,
-    current_pull_requests_reviews: 0,
-    is_frozen: 0,
-    monster_age_in_minutes: 1, 
-}]
-
 const insertUserMonster = (db: DB, data: QueryParameterSet, query: string) => {
     const insertUserMonsterQuery = db.prepareQuery<[], {
         user_monster_id: number;
@@ -135,8 +91,6 @@ const insertUserMonster = (db: DB, data: QueryParameterSet, query: string) => {
     insertUserMonsterQuery.execute(data);
     insertUserMonsterQuery.finalize();
 };
-
-// These should be in a separate file from the seeding code. The seeding is really just for debugging, but inserting records in general is a feature.
 
 const seedUsersMonsters = (db: DB, userMonsterList: Array<QueryParameterSet> ) => {
     userMonsterList.forEach((userMonsterData) => {
