@@ -1,22 +1,10 @@
 import { DB, QueryParameterSet } from "https://deno.land/x/sqlite@v3.8/mod.ts";
 import { createMonsterTableQueryString, insertMonsterQueryString } from "./database/queries/monsters.ts"
+import { createUserMonstersTableQueryString, insertUserMonsterQueryString } from "./database/queries/user_monsters.ts";
 
 const queries = [
     createMonsterTableQueryString,
-    `
-        CREATE TABLE IF NOT EXISTS user_monsters (
-            user_monster_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-            monster_id INTEGER,
-            nickname TEXT,
-            current_commits INTEGER NOT NULL,
-            current_pull_requests_opened INTEGER NOT NULL,
-            current_opened_issues INTEGER NOT NULL,
-            current_pull_requests_reviews INTEGER NOT NULL,
-            is_frozen INTEGER NOT NULL,
-            monster_age_in_minutes INTEGER NOT NULL,
-            FOREIGN KEY(monster_id) REFERENCES monsters(monster_id)
-        )
-    `,
+    createUserMonstersTableQueryString,
     `
         CREATE TABLE IF NOT EXISTS users (
             user_id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -183,30 +171,6 @@ const usersMonstersData = [{
     monster_age_in_minutes: 1, 
 }]
 
-const userMonsterQueryString = `
-  INSERT INTO user_monsters (
-    user_monster_id, 
-    monster_id, 
-    nickname, 
-    current_commits, 
-    current_pull_requests_opened, 
-    current_opened_issues, 
-    current_pull_requests_reviews, 
-    is_frozen, 
-    monster_age_in_minutes 
-  ) VALUES (
-    :user_monster_id, 
-    :monster_id, 
-    :nickname, 
-    :current_commits, 
-    :current_pull_requests_opened, 
-    :current_opened_issues, 
-    :current_pull_requests_reviews, 
-    :is_frozen, 
-    :monster_age_in_minutes 
-   )
-`;
-
 const insertUserMonster = (db: DB, data: QueryParameterSet, query: string) => {
     const insertUserMonsterQuery = db.prepareQuery<[], {
         user_monster_id: number;
@@ -227,7 +191,7 @@ const insertUserMonster = (db: DB, data: QueryParameterSet, query: string) => {
 
 const seedUsersMonsters = (db: DB, userMonsterList: Array<QueryParameterSet> ) => {
     userMonsterList.forEach((userMonsterData) => {
-        insertUserMonster(db, userMonsterData, userMonsterQueryString);
+        insertUserMonster(db, userMonsterData, insertUserMonsterQueryString);
     });
 };
 
